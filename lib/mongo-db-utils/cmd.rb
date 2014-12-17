@@ -191,13 +191,13 @@ module MongoDbUtils
     end
 
     def self.unzip(archive, dir)
-      command = "tar --extract --gzip --file=#{archive} --directory=#{dir} --strip 1"
+      command = "tar --extract --gzip --file=#{archive} --directory=#{File.expand_path(dir)} --strip 1"
       output = `#{command} 2>&1`
       raise "#{output} cmd <#{command}>" unless $?.to_i == 0
     end
 
     def self.list_archive_folders(folder, archive)
-      command = "tar --list --file=#{File.join(folder, archive)} | grep '/$'"
+      command = "tar --list --file=#{File.join(File.expand_path(folder), archive)} | grep '/$'"
       output = `#{command} 2>&1`
       raise "#{output} cmd <#{command}>" unless $?.to_i == 0
       output.split

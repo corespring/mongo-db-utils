@@ -131,7 +131,7 @@ module MongoDbUtils
     def self.restore_from_backup(backup_folder, db, backup, source_db)
       Dir.mktmpdir do |dir|
         puts "Unzipping archive ..."
-        unzip(File.join(backup_folder, backup), dir)
+        unzip(File.expand_path(File.join(backup_folder, backup)), dir)
         puts "Restoring db ..."
         restore_db(db, File.join(dir, source_db ))
       end

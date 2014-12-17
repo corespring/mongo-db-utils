@@ -191,7 +191,7 @@ module MongoDbUtils
     end
 
     def self.unzip(archive, dir)
-      command = "tar --extract --gzip --file=#{archive} --directory=#{File.expand_path(dir)} --strip 1"
+      command = "tar --extract --gzip --file=#{archive} --directory=#{dir} --strip 1"
       output = `#{command} 2>&1`
       raise "#{output} cmd <#{command}>" unless $?.to_i == 0
     end

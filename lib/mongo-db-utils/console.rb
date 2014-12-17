@@ -216,7 +216,7 @@ module MongoDbUtils
         plan[:source_db] = folder
       end
 
-      if ask("Restore db #{db}? (Y|n) [n]") != 'Y'
+      if ask("Restore db #{plan[:db]}? (Y|n) [n]") != 'Y'
         main_menu
         return
       end

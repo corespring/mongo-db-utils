@@ -99,8 +99,9 @@ module MongoDbUtils
     end
 
     def self.list_downloaded_backups(backup_folder)
-      FileUtils.mkdir_p(backup_folder)
-      Dir.entries(backup_folder).select { |a| a.end_with? '.tgz' }
+      full_path = File.expand_path(backup_folder)
+      FileUtils.mkdir_p(full_path)
+      Dir.entries(full_path).select { |a| a.end_with? '.tgz' }
     end
 
     def self.list_backup_folders(backup_folder, backup)
@@ -119,7 +120,7 @@ module MongoDbUtils
       if File.exists? backup_file
         puts "File downloaded already #{backup_file}"
       else
-        FileUtils.mkdir_p(backup_folder)
+        FileUtils.mkdir_p(File.expand_path(backup_folder))
         puts "Downloading #{backup_file}"
         download_backup(backup_file, backup, bucket_name, access_key_id, secret_access_key)
       end

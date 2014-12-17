@@ -111,16 +111,17 @@ module MongoDbUtils
     end
 
     def self.download_backup_from_s3(backup_folder, backup, bucket_name, access_key_id, secret_access_key)
+      full_path = File.expand_path(backup_folder)
       if backup == 'latest'
         backup = get_latest_backup(bucket_name, access_key_id, secret_access_key)
       end
-      backup_file = File.join(backup_folder, File.basename(backup))
+      backup_file = File.join(full_path, File.basename(backup))
 
       puts "download_backup_from_s3 #{backup_file}"
       if File.exists? backup_file
         puts "File downloaded already #{backup_file}"
       else
-        FileUtils.mkdir_p(File.expand_path(backup_folder))
+        FileUtils.mkdir_p(full_path)
         puts "Downloading #{backup_file}"
         download_backup(backup_file, backup, bucket_name, access_key_id, secret_access_key)
       end

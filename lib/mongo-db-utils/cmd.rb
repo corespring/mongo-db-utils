@@ -128,12 +128,17 @@ module MongoDbUtils
       backup
     end
 
-    def self.restore_from_backup(backup_folder, db, backup, source_db)
+    def self.restore_from_backup(backup_folder, db, backup, source_db, blacklist = [])
       Dir.mktmpdir do |dir|
         puts "Unzipping archive ..."
         unzip(File.expand_path(File.join(backup_folder, File.basename(backup))), dir)
+        Dir.foreach(File.join(dir, source_db)) do |file|
+          blacklist.each do |blacklisted|
+            File.delete(File.join(dir, source_db, file)) if file =~ /#{blacklisted}\..*/
+          end
+        end
         puts "Restoring db ..."
-        restore_db(db, File.join(dir, source_db ))
+        restore_db(db, File.join(dir, source_db))
       end
     end
 

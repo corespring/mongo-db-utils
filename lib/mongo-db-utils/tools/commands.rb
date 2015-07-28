@@ -92,6 +92,7 @@ module MongoDbUtils
         super('mongoimport', host_and_port, db, username, password)
         add_option(o('-c', collection))
         add_option(o('--file', file))
+        add_option('--noIndexRestore') if opts[:no_index]
         add_option('--jsonArray') if opts[:json_array]
         add_option('--drop') if opts[:drop]
       end

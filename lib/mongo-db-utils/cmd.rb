@@ -128,7 +128,7 @@ module MongoDbUtils
       backup
     end
 
-    def self.restore_from_backup(backup_folder, db, backup, source_db, blacklist = [])
+    def self.restore_from_backup(backup_folder, db, backup, source_db, no_index=false, blacklist = [])
       Dir.mktmpdir do |dir|
         puts "Unzipping archive ..."
         unzip(File.expand_path(File.join(backup_folder, File.basename(backup))), dir)
@@ -138,7 +138,7 @@ module MongoDbUtils
           end
         end
         puts "Restoring db ..."
-        restore_db(db, File.join(dir, source_db))
+        restore_db(db, File.join(dir, source_db), {:no_index => no_index})
       end
     end
 
@@ -173,7 +173,7 @@ module MongoDbUtils
       MongoDbUtils::S3::get_file(download_file_name, backup, bucket_name, access_key_id, secret_access_key)
     end
 
-    def self.restore_db(destination, backup)
+    def self.restore_db(destination, backup, options)
       puts "restoring db #{destination} from #{backup}"
 
       # if the destination db doesn't exist
@@ -192,7 +192,8 @@ module MongoDbUtils
         destination.name,
         backup,
         username,
-        password).run
+        password,
+        options[:no_index]).run
     end
 
     def self.unzip(archive, dir)

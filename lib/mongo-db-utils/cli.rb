@@ -40,15 +40,15 @@ module MongoDbUtils
       Cmd.backup_s3(backup_folder, db, bucket_name, access_key_id, secret_access_key)
     end
 
-    desc "restore_from_s3 MONGO_URI BUCKET ACCESS_KEY SECRET_ACCESS_KEY SOURCE_DB [BLACKLISTED_COLLECTIONS] [REPLICA_SET_NAME]", "restore a db from Amason s3 with a mongo uri eg: mongodb://user:pass@server:port/dbname"
-    def restore_from_s3(mongo_uri, bucket_name, access_key_id, secret_access_key, source_db, blacklist = '', replica_set_name = nil)
+    desc "restore_from_s3 MONGO_URI BUCKET ACCESS_KEY SECRET_ACCESS_KEY SOURCE_DB [NO_INDEX] [BLACKLISTED_COLLECTIONS] [REPLICA_SET_NAME]", "restore a db from Amason s3 with a mongo uri eg: mongodb://user:pass@server:port/dbname"
+    def restore_from_s3(mongo_uri, bucket_name, access_key_id, secret_access_key, source_db, no_index='false', blacklist = '', replica_set_name = nil)
       config = get_config
       db = get_db(mongo_uri, replica_set_name)
       raise "can't parse uri" if db.nil?
       Dir.mktmpdir do |tmp_dir|
         puts blacklist.split(',')
         backup = Cmd.download_backup_from_s3(tmp_dir, 'latest', bucket_name, access_key_id, secret_access_key)
-        Cmd.restore_from_backup(tmp_dir, db, backup, source_db, blacklist.split(','))
+        Cmd.restore_from_backup(tmp_dir, db, backup, source_db, blacklist.split(','), no_index == 'true')
       end
     end
 

@@ -72,9 +72,10 @@ module MongoDbUtils
     end
 
     class Restore < BaseCmd
-      def initialize(host_and_port,db,source_folder,username = '', password = '')
+      def initialize(host_and_port,db,source_folder,username = '', password = '',no_index=false)
         super('mongorestore', host_and_port, db, username, password)
         add_option('--drop')
+        add_option('--noIndexRestore') if no_index
         @source_folder = source_folder
       end
 
